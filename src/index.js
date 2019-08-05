@@ -1,30 +1,35 @@
-const puppeteer = require('puppeteer');
-const {
-  GetProperty
-} = require('./utils')
+const request = require("request");
+const cheerio = require('cheerio');
 
 /** Get a random poem 
  * from https://w0.poemhunter.com/members/random-poem/ 
  * */
 const getRandomPoem = async () => {
-  const url = 'https://w0.poemhunter.com/members/random-poem/';
+  const uri = 'https://w0.poemhunter.com/members/random-poem/';
   const titleSelector = '#content > div.content-block.bordered.random-poem > div > div.poem > h2';
   const contentSelector = '#content > div.content-block.bordered.random-poem > div > div.poem > p';
 
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
+  return new Promise((resolve, reject) => {
+    request({
+        uri
+      },
+      async (error, response, body) => {
+        console.log({
+          error
+        })
+        if (error) reject(error);
+        const $ = await cheerio.load(body)
 
-  await page.goto(url);
+        const title = await $(titleSelector).text()
+        const content = await $(contentSelector).text()
 
-  let title = await GetProperty((await page.$$(titleSelector, h1 => h1))[0], 'innerText');
-  let content = await GetProperty((await page.$$(contentSelector, p => p))[0], 'innerText');
-
-  await browser.close();
-
-  return {
-    title,
-    content
-  }
+        resolve({
+          title,
+          content
+        })
+      }
+    );
+  })
 };
 
 module.exports = {
