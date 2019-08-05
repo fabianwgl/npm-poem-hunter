@@ -14,9 +14,6 @@ const getRandomPoem = async () => {
         uri
       },
       async (error, response, body) => {
-        console.log({
-          error
-        })
         if (error) reject(error);
         const $ = await cheerio.load(body)
 
