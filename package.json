@@ -1,6 +1,6 @@
 {
   "name": "npm-poem-hunter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "npm utility to fetch poems from poemhunter.com",
   "main": "src/",
   "scripts": {
